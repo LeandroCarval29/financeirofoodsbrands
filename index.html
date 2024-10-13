@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DRE - Demonstração do Resultado do Exercício</title>
+    <style>
+        /* Estilos do site */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+        }
+        h1 {
+            color: #4CAF50;
+            text-align: center;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input {
+            padding: 8px;
+            width: 100%;
+            max-width: 300px;
+            margin-bottom: 15px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e0f7e9;
+            color: #333;
+            font-size: 18px;
+        }
+        .barra-status {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+        .gadget {
+            background-color: #f9f9f9;
+            padding: 10px;
+            margin: 20px 0;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        .gadget h2 {
+            color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Barra de status com horário -->
+    <div class="barra-status">
+        <span id="statusHora"></span>
+    </div>
+
+    <!-- Gadget de saudação -->
+    <div class="gadget">
+        <h2 id="saudacao"></h2>
+    </div>
+
+    <h1>DRE - Demonstração do Resultado do Exercício</h1>
+
+    <form id="dreForm">
+        <!-- Receita Bruta -->
+        <label for="receitaBruta">Receita Bruta (R$):</label>
+        <input type="number" id="receitaBruta" placeholder="Digite a receita bruta" required>
+
+        <!-- Deduções de Receita -->
+        <label for="deducoesReceita">Deduções de Receita (R$):</label>
+        <input type="number" id="deducoesReceita" placeholder="Digite as deduções de receita">
+
+        <!-- Receita Líquida -->
+        <label for="receitaLiquida">Receita Líquida (R$):</label>
+        <input type="number" id="receitaLiquida" placeholder="Digite a receita líquida" required>
+
+        <!-- Custo das Mercadorias Vendidas (CMV) -->
+        <label for="custoMercadorias">Custo das Mercadorias Vendidas - CMV (R$):</label>
+        <input type="number" id="custoMercadorias" placeholder="Digite o CMV" required>
+
+        <!-- Lucro Bruto -->
+        <label for="lucroBruto">Lucro Bruto (R$):</label>
+        <input type="number" id="lucroBruto" placeholder="Digite o lucro bruto">
+
+        <!-- Despesas Operacionais -->
+        <label for="despesasOperacionais">Despesas Operacionais (R$):</label>
+        <input type="number" id="despesasOperacionais" placeholder="Digite as despesas operacionais">
+
+        <!-- Resultado Operacional -->
+        <label for="resultadoOperacional">Resultado Operacional (R$):</label>
+        <input type="number" id="resultadoOperacional" placeholder="Digite o resultado operacional">
+
+        <!-- Resultado Antes do IR -->
+        <label for="resultadoAntesIR">Resultado Antes do IR (R$):</label>
+        <input type="number" id="resultadoAntesIR" placeholder="Digite o resultado antes do IR">
+
+        <!-- Imposto de Renda -->
+        <label for="impostoRenda">Imposto de Renda (R$):</label>
+        <input type="number" id="impostoRenda" placeholder="Digite o valor do IR">
+
+        <!-- Resultado Líquido (Profit) -->
+        <label for="resultadoLiquido">Resultado Líquido (Profit) (R$):</label>
+        <input type="number" id="resultadoLiquido" placeholder="Digite o resultado líquido">
+
+        <!-- Botão de calcular -->
+        <button type="button" onclick="calcularProfit()">Calcular Profit</button>
+    </form>
+
+    <div class="result" id="resultadoFinal"></div>
+
+    <script>
+        // Função para atualizar o horário na barra de status
+        function atualizarHorario() {
+            const data = new Date();
+            const horas = data.getHours().toString().padStart(2, '0');
+            const minutos = data.getMinutes().toString().padStart(2, '0');
+            const segundos = data.getSeconds().toString().padStart(2, '0');
+            document.getElementById('statusHora').innerText = `Horário atual: ${horas}:${minutos}:${segundos}`;
+        }
+
+        // Função para exibir saudação com base no horário
+        function mostrarSaudacao() {
+            const data = new Date();
+            const hora = data.getHours();
+            let saudacao = '';
+
+            if (hora >= 5 && hora < 12) {
+                saudacao = 'Bom dia! Pronto para trabalhar nos resultados?';
+            } else if (hora >= 12 && hora < 18) {
+                saudacao = 'Boa tarde! Continue com seu progresso!';
+            } else {
+                saudacao = 'Boa noite! Um ótimo trabalho no fechamento!';
+            }
+
+            document.getElementById('saudacao').innerText = saudacao;
+        }
+
+        // Função para calcular o Profit
+        function calcularProfit() {
+            // Capturando os valores dos inputs
+            const receitaBruta = parseFloat(document.getElementById('receitaBruta').value) || 0;
+            const deducoesReceita = parseFloat(document.getElementById('deducoesReceita').value) || 0;
+            const receitaLiquida = receitaBruta - deducoesReceita;
+            const custoMercadorias = parseFloat(document.getElementById('custoMercadorias').value) || 0;
+            const lucroBruto = receitaLiquida - custoMercadorias;
+            const despesasOperacionais = parseFloat(document.getElementById('despesasOperacionais').value) || 0;
+            const resultadoOperacional = lucroBruto - despesasOperacionais;
+            const impostoRenda = parseFloat(document.getElementById('impostoRenda').value) || 0;
+            const resultadoLiquido = resultadoOperacional - impostoRenda;
+
+            // Exibindo o resultado
+            document.getElementById('resultadoFinal').innerHTML = `
+                <strong>Resultado Final (Profit): R$ ${resultadoLiquido.toFixed(2)}</strong>
+            `;
+        }
+
+        // Atualizar o horário e saudação quando a página carregar
+        setInterval(atualizarHorario, 1000); // Atualiza o horário a cada 1 segundo
+        mostrarSaudacao(); // Mostra a saudação ao carregar
+    </script>
+
+</body>
+</html>
